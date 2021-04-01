@@ -128,3 +128,41 @@ export const CREATE_ALBUM = gql`
         }
     }
 `
+
+export const UPDATE_ALBUM = gql`
+    mutation UpdateAlbum(
+        $id: ID!
+        $title: String!
+    ){
+        updateZone(
+            input: {
+                where: { id: $id }
+                data: {
+                    title: $title
+                }
+            }
+        ){
+            album {
+                id
+                title
+            }
+        }
+    }
+`
+
+export const DELETE_ALBUM = gql`
+    mutation DeleteAlbum(
+        $id: ID!
+    ){
+        deleteAlbum(
+            input: {
+                where: { id: $id }
+            }
+        ){
+            album {
+                id
+                title
+            }
+        }
+    }
+`

@@ -54,12 +54,18 @@ const Areas = () => {
                                             type="primary" 
                                             loading={loadingUpdate}
                                             onClick={async () => {
-                                                await updateZone({ variables: {
-                                                    id: item.id,
-                                                    name: zoneName
-                                                }})
-                                                setZoneName("")
-                                                setOpenPopover(false)
+                                                try{
+                                                    await updateZone({ variables: {
+                                                        id: item.id,
+                                                        name: zoneName
+                                                    }})
+                                                    message.success("Se ha editado el área correctamente")
+                                                    setZoneName("")
+                                                    setOpenPopover(false)
+                                                } catch(err) {
+                                                    console.log(err)
+                                                    message.error("Ocurrió un error durante el borrado del área")
+                                                }
                                             }}
                                         >Editar</Button>
                                     </div>
@@ -86,7 +92,12 @@ const Areas = () => {
                                             style={{ filter: "hue-rotate(150deg)" }}
                                             loading={loadingDelete}
                                             onClick={async () => {
-                                                await deleteZone({ variables: { id: item.id }})
+                                                try{
+                                                    await deleteZone({ variables: { id: item.id }})
+                                                    message.success("Se ha borrado el área correctamente")
+                                                } catch(err) {
+                                                    message.error("Ocurrió un error durante el borrado del área")
+                                                }
                                                 setOpenPopover(false)
                                             }}
                                         >Eliminar</Button>
@@ -96,20 +107,6 @@ const Areas = () => {
                         >
                             <Tag color="volcano" style={{ cursor: "pointer" }}><DeleteOutlined /> Eliminar</Tag>
                         </Popover>
-                        <Modal
-                            title="Crear una nueva área"
-                            visible={createZoneModal}
-                            onCancel={() => setCreateZoneModal(false)}
-                            onOk={async () => {
-                                await createZone({ variables: { name: zoneName }})
-                                setCreateZoneModal(false)
-                            }}
-                            okText="Crear"
-                            confirmLoading={loadingCreate}
-                        >
-                            <label htmlFor="name">Nombre</label>
-                            <Input name="name" value={zoneName} onChange={evt => setZoneName(evt.target.value)} />
-                        </Modal>
                     </div>
                 )
             }
@@ -122,6 +119,27 @@ const Areas = () => {
                 <Button onClick={() => setCreateZoneModal(true)}><PlusOutlined /> Nueva área</Button>
             </div>
             <Table loading={loading} dataSource={data?.zones || []} columns={columns} rowKey="id" />
+            <Modal
+                title="Crear una nueva área"
+                visible={createZoneModal}
+                onCancel={() => setCreateZoneModal(false)}
+                onOk={async () => {
+                    try{
+                        await createZone({ variables: { name: zoneName }})
+                        message.success("Área creada correctamente")
+                        setZoneName("")
+                        setCreateZoneModal(false)
+                    } catch(err) {
+                        console.log(err)
+                        message.success("Ocurrió un error en la creación de un área")
+                    }
+                }}
+                okText="Crear"
+                confirmLoading={loadingCreate}
+            >
+                <label htmlFor="name">Nombre</label>
+                <Input name="name" value={zoneName} onChange={evt => setZoneName(evt.target.value)} />
+            </Modal>
         </BodyWrapper>
     )
 }
