@@ -57,6 +57,68 @@ export const DELETE_ZONE = gql`
     }
 `
 
+export const CREATE_SUBZONE = gql`
+    mutation CreateSubzone(
+        $name: String!
+        $zone: ID!
+    ){
+        createSubzone(
+            input: {
+                data: {
+                    name: $name
+                    zone: $zone
+                }
+            }
+        ){
+            subzone {
+                id
+                name
+                zone {
+                    id
+                }
+            }
+        }
+    }
+`
+
+export const UPDATE_SUBZONE = gql`
+    mutation UpdateSubzone(
+        $id: ID!
+        $name: String!
+    ){
+        updateSubzone(
+            input: {
+                where: { id: $id }
+                data: {
+                    name: $name
+                }
+            }
+        ){
+            subzone {
+                id
+                name
+            }
+        }
+    }
+`
+
+export const DELETE_SUBZONE = gql`
+    mutation DeleteSubzone(
+        $id: ID!
+    ){
+        deleteSubzone(
+            input: {
+                where: { id: $id }
+            }
+        ){
+            subzone {
+                id
+                name
+            }
+        }
+    }
+`
+
 export const CREATE_ALBUM = gql`
     mutation CreateAlbum(
         $title: String!
